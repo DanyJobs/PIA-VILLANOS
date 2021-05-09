@@ -5,6 +5,13 @@
  */
 package interfaz;
 
+import Clases.Combo;
+import Clases.Procedimientos;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Andrea
@@ -15,12 +22,11 @@ public class ModificarPokemon extends javax.swing.JFrame {
      * Creates new form ConsultaMedallas
      */
     public ModificarPokemon() {
-       initComponents();
-       
+        initComponents();
+        Combo llenar = new Combo();
+        llenar.llenar_combo(cmbTipo, "Select * from TipoPokemon", "IdTipoPoke", "nombre");
     }
 
-   
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,6 +48,8 @@ public class ModificarPokemon extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        cmbTipo = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
         txtFPs = new javax.swing.JTextField();
         txtFAltura = new javax.swing.JTextField();
         txtFPeso = new javax.swing.JTextField();
@@ -123,37 +131,67 @@ public class ModificarPokemon extends javax.swing.JFrame {
         getContentPane().add(jLabel9);
         jLabel9.setBounds(30, 280, 30, 30);
 
+        cmbTipo.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        cmbTipo.setInheritsPopupMenu(true);
+        getContentPane().add(cmbTipo);
+        cmbTipo.setBounds(120, 320, 170, 30);
+
+        jLabel15.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        jLabel15.setText("Tipo:");
+        getContentPane().add(jLabel15);
+        jLabel15.setBounds(30, 320, 80, 20);
+
         txtFPs.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         getContentPane().add(txtFPs);
         txtFPs.setBounds(120, 280, 170, 30);
 
         txtFAltura.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        txtFAltura.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtFAlturaKeyTyped(evt);
+            }
+        });
         getContentPane().add(txtFAltura);
         txtFAltura.setBounds(120, 200, 170, 30);
 
         txtFPeso.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        txtFPeso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtFPesoKeyTyped(evt);
+            }
+        });
         getContentPane().add(txtFPeso);
         txtFPeso.setBounds(120, 240, 170, 30);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/panel1.png"))); // NOI18N
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(10, 70, 290, 250);
+        jLabel3.setBounds(10, 70, 290, 280);
 
         btnBuscar.setBackground(java.awt.Color.orange);
         btnBuscar.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(102, 62, 0));
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnBuscar);
-        btnBuscar.setBounds(330, 50, 80, 23);
+        btnBuscar.setBounds(320, 50, 80, 23);
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/BotonBuscar.png"))); // NOI18N
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(350, 0, 40, 50);
+        jLabel10.setBounds(340, 0, 40, 50);
 
         btnModificar.setBackground(java.awt.Color.orange);
         btnModificar.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         btnModificar.setForeground(new java.awt.Color(102, 62, 0));
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnModificar);
         btnModificar.setBounds(320, 140, 90, 23);
 
@@ -211,17 +249,101 @@ public class ModificarPokemon extends javax.swing.JFrame {
 
     private void btnMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenuMouseClicked
         // TODO add your handling code here:
-        PantallaPrincipal pantPrincipal= new PantallaPrincipal();
+        PantallaPrincipal pantPrincipal = new PantallaPrincipal();
         pantPrincipal.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnMenuMouseClicked
 
     private void btnRegresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresarMouseClicked
         // TODO add your handling code here:
-        ActualizarPokemon actPoke= new ActualizarPokemon();
+        ActualizarPokemon actPoke = new ActualizarPokemon();
         actPoke.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnRegresarMouseClicked
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        String vDato = txtFIdPokemon.getText().trim();
+        int indice;
+        String co;
+        Combo llenar = new Combo();
+        int tipo = cmbTipo.getItemAt(cmbTipo.getSelectedIndex()).getCodigo();
+        if (vDato.equals("")) {
+            JOptionPane.showMessageDialog(null, "Favor de llenar todos los datos", "Error de introduccion de datos", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                String sql = "SELECT * ,TipoPokemon.Nombre AS nombreTipo \n"
+                        + "FROM Pokemon\n"
+                        + "INNER JOIN TipoPokemon\n"
+                        + "ON Pokemon.IdTipoPoke = TipoPokemon.IdTipoPoke where Pokemon.idPokemon = '" + vDato + "'";
+                ResultSet consulta = Procedimientos.BuscarConsultas(sql);
+                if (consulta != null && consulta.next()) {
+                        txtFIdPokemon.setText(consulta.getString("idPokemon"));
+                        txtFNombre.setText(consulta.getString("nombre"));
+                        txtFAltura.setText(String.valueOf(consulta.getFloat("altura")));
+                        txtFPeso.setText(String.valueOf(consulta.getFloat("peso")));
+                        txtFPreEvolucion.setText(consulta.getString("preevolucion"));
+                        txtFEvolucion.setText(consulta.getString("evolucion"));
+                        txtFPs.setText(String.valueOf(consulta.getInt("ps")));
+                        cmbTipo.setSelectedIndex(consulta.getInt("idTipoPoke"));
+                    
+                }else{
+                 JOptionPane.showMessageDialog(null, "No se encontro resultados", "Error de conexion", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage(), "Error de conexion", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        int idPokemon;
+        String nombre;
+        String preevolucion;
+        String evolucion;
+        float altura;
+        float peso;
+        int tipo;
+        int ps;
+        String mensaje;
+
+        if (txtFIdPokemon.getText().isEmpty() || txtFNombre.getText().isEmpty() || txtFPreEvolucion.getText().isEmpty() || txtFEvolucion.getText().isEmpty() || txtFAltura.getText().isEmpty() || txtFPs.getText().isEmpty() || txtFPeso.getText().isEmpty()
+                || cmbTipo.getSelectedIndex() == 0 || cmbTipo.getSelectedItem().equals("Seleccionar")) {
+            JOptionPane.showMessageDialog(null, "Favor de llenar todos los datos", "Error de introduccion de datos", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                idPokemon = Integer.parseInt(txtFIdPokemon.getText().trim());
+                nombre = txtFNombre.getText().trim();
+                preevolucion = txtFPreEvolucion.getText().trim();
+                evolucion = txtFEvolucion.getText().trim();
+                altura = Float.parseFloat(txtFAltura.getText().trim());
+                peso = Float.parseFloat(txtFPeso.getText().trim());
+                ps = Integer.parseInt(txtFPs.getText().trim());
+                tipo = cmbTipo.getItemAt(cmbTipo.getSelectedIndex()).getCodigo();
+                mensaje = Procedimientos.ModificarPokemon(idPokemon, nombre, preevolucion, evolucion, altura, peso, tipo, ps);
+                JOptionPane.showMessageDialog(null, mensaje);
+                txtFIdPokemon.setText("");
+                txtFNombre.setText("");
+                txtFAltura.setText("");
+                txtFPeso.setText("");
+                txtFPreEvolucion.setText("");
+                txtFEvolucion.setText("");
+                txtFPs.setText("");
+                cmbTipo.setSelectedIndex(0);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage(), "Error de conexion", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void txtFAlturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFAlturaKeyTyped
+        Procedimientos.txtNumeroKeyTyped(evt,txtFAltura);
+    }//GEN-LAST:event_txtFAlturaKeyTyped
+
+    private void txtFPesoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFPesoKeyTyped
+      Procedimientos.txtNumeroKeyTyped(evt,txtFPeso);
+    }//GEN-LAST:event_txtFPesoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -251,8 +373,6 @@ public class ModificarPokemon extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
 
- 
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -266,12 +386,14 @@ public class ModificarPokemon extends javax.swing.JFrame {
     private javax.swing.JButton btnMenu;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<Combo> cmbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

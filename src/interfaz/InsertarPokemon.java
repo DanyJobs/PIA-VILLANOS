@@ -178,6 +178,11 @@ public class InsertarPokemon extends javax.swing.JFrame {
 
         cmbTipo.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
         cmbTipo.setInheritsPopupMenu(true);
+        cmbTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbTipoActionPerformed(evt);
+            }
+        });
         getContentPane().add(cmbTipo);
         cmbTipo.setBounds(510, 310, 170, 30);
 
@@ -283,8 +288,7 @@ public class InsertarPokemon extends javax.swing.JFrame {
           cmbTipo.getSelectedIndex()==0){   
            JOptionPane.showMessageDialog(null, "Favor de llenar todos los datos", "Error de introduccion de datos", JOptionPane.ERROR_MESSAGE);       
         } else{
-            try{
-                
+            try{                
         nombre = txtFNombre.getText().trim();
         preevolucion = txtFPreEvolucion.getText().trim();
         evolucion = txtFEvolucion.getText().trim();        
@@ -322,6 +326,10 @@ public class InsertarPokemon extends javax.swing.JFrame {
     private void txtFPsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFPsKeyTyped
       Procedimientos.txtNumeroKeyTyped(evt,txtFPs);
     }//GEN-LAST:event_txtFPsKeyTyped
+
+    private void cmbTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbTipoActionPerformed
  
     /**
      * @param args the command line arguments

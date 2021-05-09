@@ -33,7 +33,7 @@ public class Combo {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public  void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 

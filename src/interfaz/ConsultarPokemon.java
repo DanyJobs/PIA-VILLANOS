@@ -22,8 +22,7 @@ public class ConsultarPokemon extends javax.swing.JFrame {
      * Creates new form ConsultaMedallas
      */
     public ConsultarPokemon() {
-       initComponents();
-      
+       initComponents();    
  
     }
 
@@ -91,11 +90,11 @@ public class ConsultarPokemon extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnBuscar);
-        btnBuscar.setBounds(560, 50, 71, 20);
+        btnBuscar.setBounds(610, 50, 71, 20);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/BotonBuscar.png"))); // NOI18N
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(580, 10, 40, 40);
+        jLabel2.setBounds(630, 10, 40, 40);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/BotonRegresar.png"))); // NOI18N
         getContentPane().add(jLabel3);
@@ -139,7 +138,7 @@ public class ConsultarPokemon extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(320, 90, 310, 140);
+        jScrollPane2.setBounds(320, 100, 360, 140);
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/BotonMenu.png"))); // NOI18N
         getContentPane().add(jLabel4);
@@ -152,11 +151,11 @@ public class ConsultarPokemon extends javax.swing.JFrame {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/panel1.png"))); // NOI18N
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(310, 80, 330, 180);
+        jLabel6.setBounds(310, 80, 380, 180);
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/05ConsultarPokemon.png"))); // NOI18N
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(0, 0, 650, 360);
+        jLabel7.setBounds(0, 0, 700, 360);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -188,13 +187,16 @@ public class ConsultarPokemon extends javax.swing.JFrame {
     }
     
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-             
-       try
+      try
        {
             limpiarTabla(jTable2);
             DefaultTableModel consulta;
-            consulta=Procedimientos.consultarPokemon(txtFIdPokemon.getText().trim());            
-            jTable2.setModel(consulta);
+            consulta=Procedimientos.consultarPokemon(txtFIdPokemon.getText().trim()); 
+            if(consulta != null){              
+             jTable2.setModel(consulta);
+            }else{
+               JOptionPane.showMessageDialog(null, "No se encontro resultados", "Error de conexion", JOptionPane.INFORMATION_MESSAGE);
+            }            
         }
         catch (SQLException e)
         {
